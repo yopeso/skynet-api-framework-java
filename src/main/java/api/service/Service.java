@@ -157,6 +157,38 @@ public final class Service {
         return this;
     }
 
+    @SafeVarargs
+    public final <E extends Enum<E>> Service put(Enum<E> route, Map<String, String> additionalHeaders, Map<Object, Object>... body) throws Exception {
+        initializeRoute(route);
+
+        requestParser = getRequest(additionalHeaders, body);
+        setRequestSpecifications();
+
+        if (containsIllegals(_route.service_url())) {
+            response = given().log().all().spec(requestSpecification).when().put(requestParser.endpoint).then().extract().response();
+            return this;
+        }
+
+        response = given().log().all().spec(requestSpecification).when().put().then().extract().response();
+        return this;
+    }
+
+    @SafeVarargs
+    public final <E extends Enum<E>> Service patch(Enum<E> route, Map<String, String> additionalHeaders, Map<Object, Object>... body) throws Exception {
+        initializeRoute(route);
+
+        requestParser = getRequest(additionalHeaders, body);
+        setRequestSpecifications();
+
+        if (containsIllegals(_route.service_url())) {
+            response = given().log().all().spec(requestSpecification).when().patch(requestParser.endpoint).then().extract().response();
+            return this;
+        }
+
+        response = given().log().all().spec(requestSpecification).when().patch().then().extract().response();
+        return this;
+    }
+
     public <E extends Enum<E>> Service delete(Enum<E> route, Map<String, String> additionalHeaders) throws Exception {
         initializeRoute(route);
 
