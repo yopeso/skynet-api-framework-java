@@ -13,21 +13,21 @@ public class RequestDetails {
     private final Map<String, Map<String, String>> serviceDetails = new LinkedHashMap<>();
 
     @SafeVarargs
-    public RequestDetails(Map<String, String> additionalHeaders, Map<Object, Object>... params) throws Exception {
-        serviceDetails(additionalHeaders, params);
+    public RequestDetails(Map<String, String> additionalHeaders, Map<Object, Object>... body) throws Exception {
+        serviceDetails(additionalHeaders, body);
     }
 
     @SuppressWarnings("all")
-    private void serviceDetails(Map<String, String> additionalHeaders, Map<Object, Object>... params) throws Exception {
+    private void serviceDetails(Map<String, String> additionalHeaders, Map<Object, Object>... body) throws Exception {
         setHeaders(additionalHeaders);
 
         serviceDetails.put("endpoints", new HashMap<String, String>() {{
             put("endpoint", Service.getRoute().absolute_url());
         }});
 
-        if(params == null || params.length < 1) return;
+        if(body == null || body.length < 1) return;
 
-        serviceDetails.put("body", new ObjectMapper().readValue(bodyDetails(params[0]), LinkedHashMap.class));
+        serviceDetails.put("body", new ObjectMapper().readValue(bodyDetails(body[0]), LinkedHashMap.class));
     }
 
     private void setHeaders(Map<String, String> additionalHeaders) {
@@ -42,10 +42,10 @@ public class RequestDetails {
         }
     }
 
-    private <E extends Enum<E>> String bodyDetails(Map<Object, Object> params) throws Exception {
+    private <E extends Enum<E>> String bodyDetails(Map<Object, Object> body) throws Exception {
         JSONObject requestParams = new JSONObject();
 
-        params.forEach((k, v) -> {
+        body.forEach((k, v) -> {
             requestParams.put(k.toString(), v);
         });
 

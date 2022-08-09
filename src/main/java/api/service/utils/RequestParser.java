@@ -12,8 +12,8 @@ public class RequestParser {
     public String body = "";
 
     @SafeVarargs
-    public RequestParser(Map<String, String> additionalHeaders, Map<Object, Object>... params) throws Exception {
-        Map<String, Map<String, String>> serviceDetails = getSearchServiceDetails(additionalHeaders, params);
+    public RequestParser(Map<String, String> additionalHeaders, Map<Object, Object>... body) throws Exception {
+        Map<String, Map<String, String>> serviceDetails = getSearchServiceDetails(additionalHeaders, body);
         parseValues(serviceDetails);
         endpoint = serviceDetails.get("endpoints").get("endpoint");
     }
@@ -42,7 +42,7 @@ public class RequestParser {
     }
 
     @SafeVarargs
-    private Map<String, Map<String, String>> getSearchServiceDetails(Map<String, String> additionalHeaders, Map<Object, Object>... params) throws Exception {
-        return new RequestDetails(additionalHeaders, params).getServiceDetails();
+    private Map<String, Map<String, String>> getSearchServiceDetails(Map<String, String> additionalHeaders, Map<Object, Object>... body) throws Exception {
+        return new RequestDetails(additionalHeaders, body).getServiceDetails();
     }
 }
