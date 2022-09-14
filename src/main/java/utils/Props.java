@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 public final class Props {
@@ -27,24 +29,48 @@ public final class Props {
         }
     }
 
-    public static String getProperty(String propertyName) throws Exception {
+    public static String getProperty(String propertyName, boolean... throwException) throws Exception {
         Object value = properties.get(propertyName);
         if (value != null) {
             return properties.get(propertyName).toString();
-        } else {
-            String errorLog = MessageFormat.format("Error occurred while getting {0} Property from MlsTestProperties. This could be due to no such property available in MlsTestProperties.properties file.", propertyName);
+        }
+
+        String errorLog = MessageFormat.format("Error occurred while getting {0} property from {1}. This could be due to no such property available in {1} " +
+                "file!", propertyName, TEST_PROPS);
+        Logger.error(errorLog);
+
+        if((throwException.length > 0 && throwException[0]) || throwException.length == 0) {
             throw new Exception(errorLog);
         }
+        return null;
     }
 
-    public static String getProperty(String filePath, String propertyName) throws Exception {
+    public static String getProperty(String filePath, String propertyName, boolean... throwException) throws Exception {
         getInstance(filePath);
         Object value = properties.get(propertyName);
         if (value != null) {
             return properties.get(propertyName).toString();
-        } else {
-            String errorLog = MessageFormat.format("Error occurred while getting {0} Property from MlsTestProperties. This could be due to no such property available in MlsTestProperties.properties file.", propertyName);
+        }
+
+        String errorLog = MessageFormat.format("Error occurred while getting {0} property from {1}. This could be due to no such property available in {1} " +
+                "file!", propertyName, TEST_PROPS);
+        Logger.error(errorLog);
+
+        if((throwException.length > 0 && throwException[0]) || throwException.length == 0) {
             throw new Exception(errorLog);
         }
+        return null;
+    }
+
+    public static String getSystemProperty(String propertyName, boolean... throwException) throws Exception {
+        Optional<Map.Entry<Object, Object>> obj = System.getProperties().entrySet().stream().filter(x -> x.getKey().equals(propertyName)).findFirst();
+
+        if(obj.isEmpty() && ((throwException.length > 0 && throwException[0]) || throwException.length == 0)) {
+            String errorLog = MessageFormat.format("Error occurred while getting {0} property from System Properties. This could be due to no such property available in System Properties!", propertyName);
+            throw new Exception(errorLog);
+
+        }
+
+        return obj.isEmpty() ? null : obj.get().getValue().toString();
     }
 }

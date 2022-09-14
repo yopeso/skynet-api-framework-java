@@ -40,6 +40,10 @@ public class TestListeners {
     public void tearDown(ITestResult iTestResult) {
     }
 
+    @AfterTest
+    public void setResults(ITestResult iTestResult) {
+    }
+
     @AfterSuite(alwaysRun = true)
     public void completeSuite(ITestContext context) {
         _logger.info(String.format("%s*** Test Suite %s ended. ***%s", utils.Logger.ANSI_GREEN, context.getName(), utils.Logger.ANSI_RESET));
