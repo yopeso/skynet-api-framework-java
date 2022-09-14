@@ -11,7 +11,9 @@ import io.restassured.config.EncoderConfig;
 import io.restassured.http.Cookie;
 import io.restassured.http.Cookies;
 import io.restassured.response.Response;
+import io.restassured.specification.QueryableRequestSpecification;
 import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.SpecificationQuerier;
 import utils.Logger;
 
 import java.io.IOException;
@@ -25,7 +27,7 @@ import static io.restassured.RestAssured.given;
 public final class Service {
 
     private RequestParser requestParser;
-    private RequestSpecBuilder requestSpecBuilder;
+    private static RequestSpecBuilder requestSpecBuilder;
     private RequestSpecification requestSpecification;
     private static Response response;
 
@@ -34,6 +36,7 @@ public final class Service {
     private static IRoutes _route;
 
     public static Service init() {
+        requestSpecBuilder = new RequestSpecBuilder();
         return new Service();
     }
 
@@ -68,7 +71,6 @@ public final class Service {
 
     private void initRequestSpecs() {
         EncoderConfig encoderconfig = new EncoderConfig();
-        requestSpecBuilder = new RequestSpecBuilder();
         requestSpecBuilder.setBaseUri(_route.service_url());
         requestSpecBuilder.setBasePath(_route.endpoint_path());
         requestSpecBuilder.setUrlEncodingEnabled(false);
@@ -233,8 +235,8 @@ public final class Service {
     }
 
     private void setRequestSpecifications() {
-        requestSpecBuilder.addHeaders(requestParser.headers);
-        requestSpecBuilder.setBody(requestParser.body);
+        if (requestParser.headers != null) requestSpecBuilder.addHeaders(requestParser.headers);
+        if (requestParser.body != null && !requestParser.body.trim().isEmpty()) requestSpecBuilder.setBody(requestParser.body);
 
         requestSpecification = requestSpecBuilder.build();
     }
