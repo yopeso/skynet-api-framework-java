@@ -11,3 +11,5 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 .reports/
 Reports/
+.idea
+**/.DS_Store
