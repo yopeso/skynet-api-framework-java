@@ -5,8 +5,7 @@
 name: Build And Publish
 
 on:
-  release:
-    types: [created]
+  push
 
 jobs:
 
