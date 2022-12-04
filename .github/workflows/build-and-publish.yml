@@ -26,7 +26,7 @@ jobs:
       - name: Persist to workspace
         uses: actions/upload-artifact@v3
         with:
-          name: all
+          name: skynet-api-framework-java
           path: .
 
   check-package-version:
@@ -40,12 +40,12 @@ jobs:
       - name: Persist to workspace
         uses: actions/upload-artifact@v3
         with:
-          name: all
+          name: skynet-api-framework-java
           path: .
       - name: attach workspace
         uses: actions/download-artifact@v3
         with:
-          name: all
+          name: skynet-api-framework-java
 
   pack:
     needs: [validate, check-package-version]
@@ -65,7 +65,7 @@ jobs:
       - name: Persist to workspace
         uses: actions/upload-artifact@v3
         with:
-          name: all
+          name: skynet-api-framework-java
           path: .
 
   build:
@@ -88,7 +88,7 @@ jobs:
       - name: attach workspace
         uses: actions/download-artifact@v3
         with:
-          name: all
+          name: skynet-api-framework-java
       - name: Publish package
         run: |
           mvn -s .github/workflows/settings.xml deploy
