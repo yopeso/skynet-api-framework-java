@@ -1,0 +1,96 @@
+
+# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+
+name: Build And Publish
+
+on:
+  release:
+    types: [created]
+
+jobs:
+
+  validate:
+    runs-on: ubuntu-latest
+    container: cimg/openjdk:17.0.3
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: v1-dependencies-${{ hashFiles('**/pom.xml') }}
+          restore-keys: v1-dependencies-
+      - name: run validate command
+        run: mvn clean install compile
+      - name: Persist to workspace
+        uses: actions/upload-artifact@v3
+        with:
+          name: all
+          path: .
+
+  check-package-version:
+    runs-on: ubuntu-latest
+    container: cimg/openjdk:17.0.3
+    if: github.ref != 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check version has been bumped
+        run: bash ./scripts/check-package-version.sh
+      - name: Persist to workspace
+        uses: actions/upload-artifact@v3
+        with:
+          name: all
+          path: .
+      - name: attach workspace
+        uses: actions/download-artifact@v3
+        with:
+          name: all
+
+  pack:
+    needs: [validate, check-package-version]
+    runs-on: ubuntu-latest
+    container: cimg/openjdk:17.0.3
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: v1-dependencies-${{ hashFiles('**/pom.xml') }}
+          restore-keys: v1-dependencies-
+      - name: run package command
+        run: mvn package
+      - name: Persist to workspace
+        uses: actions/upload-artifact@v3
+        with:
+          name: all
+          path: .
+
+  build:
+    needs: pack
+    runs-on: ubuntu-latest
+    container: cimg/openjdk:17.0.3
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: run install command
+        run: mvn clean install
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    container: cimg/openjdk:17.0.3
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/verify'
+
+    steps:
+      - name: attach workspace
+        uses: actions/download-artifact@v3
+        with:
+          name: all
+      - name: Publish package
+        run: |
+          mvn -s .github/workflows/settings.xml deploy
+          rm -f ~/version.txt
