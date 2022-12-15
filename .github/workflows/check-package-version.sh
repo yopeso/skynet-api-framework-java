@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # setup git
-git config user.name "leonardmustatea"
-git config user.email "leonard.mustatea@gmail.com"
+git config user.name "pbrosteanu"
+git config user.email "paul.brosteanu@yopeso.com"
 git checkout main
 
 latest_release=$(mvn -s .github/workflows/settings.xml -q \
