@@ -6,7 +6,7 @@ git config user.email "paul.brosteanu@yopeso.com"
 git fetch
 git checkout main
 #!!!after merged into master, have to change bellow path to settings.xml to point to github folder
-latest_release=$(mvn -s circleci/settings.xml -q \
+latest_release=$(mvn -s .circleci/settings.xml -q \
                       -Dexec.executable="echo" -Dexec.args='${project.version}' \
                       --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec)
 
