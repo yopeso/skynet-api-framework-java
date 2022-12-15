@@ -3,6 +3,7 @@
 # setup git
 git config user.name "pbrosteanu"
 git config user.email "paul.brosteanu@yopeso.com"
+git fetch
 git checkout main
 
 latest_release=$(mvn -s .github/workflows/settings.xml -q \
