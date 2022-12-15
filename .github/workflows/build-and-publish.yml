@@ -36,7 +36,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Check version has been bumped
-        run: bash ./.github/workflows/check-package-version.sh
+        run: |
+          git config --global --add safe.directory /__w/skynet-api-framework-java/skynet-api-framework-java
+          bash ./.github/workflows/check-package-version.sh
       - name: Persist to workspace
         uses: actions/upload-artifact@v3
         with:
