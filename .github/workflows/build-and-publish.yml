@@ -36,7 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Check version has been bumped
-        run: bash ./scripts/check-package-version.sh
+        run: bash ./.github/workflows/check-package-version.sh
       - name: Persist to workspace
         uses: actions/upload-artifact@v3
         with:
