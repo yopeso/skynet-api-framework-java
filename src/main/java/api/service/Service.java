@@ -207,13 +207,22 @@ public final class Service {
         return this;
     }
 
-    public <T> T responseToPojo(Class<T> type) throws Exception {
+    public static  <T> T responseToPojo(Class<T> type) throws Exception {
         try {
             return new ObjectMapper().enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY).readValue(response.asString(), type);
         } catch(IOException ioException) {
             throw new Exception("Response Received did not match the expected Response Format POJO: " + type.getName() + ioException);
         }
     }
+
+    public static <T> T responseToPojo(Class<T> type,Response response) throws Exception {
+        try {
+            return new ObjectMapper().enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY).readValue(response.asString(), type);
+        } catch(IOException ioException) {
+            throw new Exception("Response Received did not match the expected Response Format POJO: " + type.getName() + ioException);
+        }
+    }
+
 
     @SafeVarargs
     private static RequestParser getRequest(Map<String, String> additionalHeaders, Map<Object, Object>... body) throws Exception {
