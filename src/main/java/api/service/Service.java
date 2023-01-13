@@ -142,6 +142,10 @@ public final class Service {
         response = given().log().all().spec(requestSpecification).when().get().then().extract().response();
         return this;
     }
+    
+    public <E extends Enum<E>> Service get(Enum<E> route) throws Exception {
+        return this.get(route, null);
+    }
 
     @SafeVarargs
     public final <E extends Enum<E>> Service post(Enum<E> route, Map<String, String> additionalHeaders, Map<Object, Object>... body) throws Exception {
