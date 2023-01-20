@@ -117,6 +117,16 @@ public final class Service {
         return this;
     }
 
+    public Service formParam(String key, String value) {
+        requestSpecBuilder.addFormParam(key, value);
+        return this;
+    }
+
+    public Service formParams(Map<String, ?> formParams) {
+        requestSpecBuilder.addFormParams(formParams);
+        return this;
+    }
+
     public Service body(Object body) {
         requestSpecBuilder.setBody(body);
         return this;
