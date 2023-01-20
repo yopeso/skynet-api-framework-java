@@ -117,6 +117,16 @@ public final class Service {
         return this;
     }
 
+    public Service formParam(String key, String value) {
+        requestSpecBuilder.addFormParam(key, value);
+        return this;
+    }
+
+    public Service formParams(Map<String, ?> formParams) {
+        requestSpecBuilder.addFormParams(formParams);
+        return this;
+    }
+
     public Service body(Object body) {
         requestSpecBuilder.setBody(body);
         return this;
@@ -141,6 +151,10 @@ public final class Service {
 
         response = given().log().all().spec(requestSpecification).when().get().then().extract().response();
         return this;
+    }
+    
+    public <E extends Enum<E>> Service get(Enum<E> route) throws Exception {
+        return this.get(route, null);
     }
 
     @SafeVarargs
