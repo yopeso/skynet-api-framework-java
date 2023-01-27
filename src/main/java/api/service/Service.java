@@ -2,7 +2,6 @@ package api.service;
 
 import api.interfaces.IRoutes;
 import api.service.utils.RequestParser;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -11,13 +10,11 @@ import io.restassured.config.EncoderConfig;
 import io.restassured.http.Cookie;
 import io.restassured.http.Cookies;
 import io.restassured.response.Response;
-import io.restassured.specification.QueryableRequestSpecification;
 import io.restassured.specification.RequestSpecification;
-import io.restassured.specification.SpecificationQuerier;
 import utils.Logger;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,14 +37,14 @@ public final class Service {
         return new Service();
     }
 
-    private <E extends Enum<E>> void initializeRoute(Enum<E> route) throws Exception {
+    private <E extends Enum<E>> void initializeRoute(Enum<E> route, String... param) throws Exception {
         if(_route == null || declaringClass != route.getDeclaringClass()) {
             declaringClass = route.getDeclaringClass();
             enumFields = declaringClass.getEnumConstants();
         }
 
         getEnumField(route);
-        initRequestSpecs();
+        initRequestSpecs(param);
     }
 
     @SuppressWarnings(value = "all")
@@ -69,12 +66,17 @@ public final class Service {
         }
     }
 
-    private void initRequestSpecs() {
+    private void initRequestSpecs(String... param) {
         EncoderConfig encoderconfig = new EncoderConfig();
         requestSpecBuilder.setBaseUri(_route.service_url());
-        requestSpecBuilder.setBasePath(_route.endpoint_path());
         requestSpecBuilder.setUrlEncodingEnabled(false);
         requestSpecBuilder.setConfig(RestAssured.config().encoderConfig(encoderconfig.appendDefaultContentCharsetToContentTypeIfUndefined(false)));
+
+        if (param != null && param.length > 0) {
+            requestSpecBuilder.setBasePath(String.format("%s/%s", _route.endpoint_path(), param[0]));
+        } else {
+            requestSpecBuilder.setBasePath(_route.endpoint_path());
+        }
     }
 
     public Service headers(Map<String, String> headers) {
@@ -215,10 +217,10 @@ public final class Service {
         }
     }
 
-    public static <T> T responseToPojo(Class<T> type,Response response) throws Exception {
+    public static <T> T responseToPojo(Class<T> type, Response response) throws Exception {
         try {
             return new ObjectMapper().enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY).readValue(response.asString(), type);
-        } catch(IOException ioException) {
+        } catch (IOException ioException) {
             throw new Exception("Response Received did not match the expected Response Format POJO: " + type.getName() + ioException);
         }
     }
