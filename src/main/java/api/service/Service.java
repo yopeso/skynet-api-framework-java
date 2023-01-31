@@ -133,11 +133,11 @@ public final class Service {
 
         // RestAssured.useRelaxedHTTPSValidation();
         if (containsIllegals(_route.service_url())) {
-            response = given().log().all().spec(requestSpecification).when().get(requestParser.endpoint).then().extract().response();
+            response = given().log().uri().log().body().spec(requestSpecification).when().get(requestParser.endpoint).then().extract().response();
             return this;
         }
 
-        response = given().log().all().spec(requestSpecification).when().get().then().extract().response();
+        response = given().log().uri().log().body().spec(requestSpecification).when().get().then().extract().response();
         return this;
     }
 
@@ -149,11 +149,11 @@ public final class Service {
         setRequestSpecifications();
 
         if (containsIllegals(_route.service_url())) {
-            response = given().log().all().spec(requestSpecification).when().post(requestParser.endpoint).then().extract().response();
+            response = given().log().uri().log().body().spec(requestSpecification).when().post(requestParser.endpoint).then().extract().response();
             return this;
         }
 
-        response = given().log().all().spec(requestSpecification).when().post().then().extract().response();
+        response = given().log().uri().log().body().spec(requestSpecification).when().post().then().extract().response();
         return this;
     }
 
@@ -165,11 +165,11 @@ public final class Service {
         setRequestSpecifications();
 
         if (containsIllegals(_route.service_url())) {
-            response = given().log().all().spec(requestSpecification).when().put(requestParser.endpoint).then().extract().response();
+            response = given().log().uri().log().body().spec(requestSpecification).when().put(requestParser.endpoint).then().extract().response();
             return this;
         }
 
-        response = given().log().all().spec(requestSpecification).when().put().then().extract().response();
+        response = given().log().uri().log().body().spec(requestSpecification).when().put().then().extract().response();
         return this;
     }
 
@@ -181,11 +181,11 @@ public final class Service {
         setRequestSpecifications();
 
         if (containsIllegals(_route.service_url())) {
-            response = given().log().all().spec(requestSpecification).when().patch(requestParser.endpoint).then().extract().response();
+            response = given().log().uri().log().body().spec(requestSpecification).when().patch(requestParser.endpoint).then().extract().response();
             return this;
         }
 
-        response = given().log().all().spec(requestSpecification).when().patch().then().extract().response();
+        response = given().log().uri().log().body().spec(requestSpecification).when().patch().then().extract().response();
         return this;
     }
 
@@ -197,11 +197,11 @@ public final class Service {
         setRequestSpecifications();
 
         if (containsIllegals(_route.service_url())) {
-            response = given().log().all().spec(requestSpecification).when().delete(requestParser.endpoint).then().extract().response();
+            response = given().log().uri().log().body().spec(requestSpecification).when().delete(requestParser.endpoint).then().extract().response();
             return this;
         }
 
-        response = given().log().all().spec(requestSpecification).when().delete().then().extract().response();
+        response = given().log().uri().log().body().spec(requestSpecification).when().delete().then().extract().response();
         return this;
     }
 
