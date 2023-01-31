@@ -37,14 +37,14 @@ public final class Service {
         return new Service();
     }
 
-    private <E extends Enum<E>> void initializeRoute(Enum<E> route, String... param) throws Exception {
+    private <E extends Enum<E>> void initializeRoute(Enum<E> route) throws Exception {
         if(_route == null || declaringClass != route.getDeclaringClass()) {
             declaringClass = route.getDeclaringClass();
             enumFields = declaringClass.getEnumConstants();
         }
 
         getEnumField(route);
-        initRequestSpecs(param);
+        initRequestSpecs();
     }
 
     @SuppressWarnings(value = "all")
@@ -66,17 +66,13 @@ public final class Service {
         }
     }
 
-    private void initRequestSpecs(String... param) {
+    private void initRequestSpecs() {
         EncoderConfig encoderconfig = new EncoderConfig();
         requestSpecBuilder.setBaseUri(_route.service_url());
         requestSpecBuilder.setUrlEncodingEnabled(false);
         requestSpecBuilder.setConfig(RestAssured.config().encoderConfig(encoderconfig.appendDefaultContentCharsetToContentTypeIfUndefined(false)));
 
-        if (param != null && param.length > 0) {
-            requestSpecBuilder.setBasePath(String.format("%s/%s", _route.endpoint_path(), param[0]));
-        } else {
-            requestSpecBuilder.setBasePath(_route.endpoint_path());
-        }
+        requestSpecBuilder.setBasePath(_route.endpoint_path());
     }
 
     public Service headers(Map<String, String> headers) {
