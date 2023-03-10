@@ -30,7 +30,7 @@
         <developerConnection>scm:git:https://github.com/yopeso/skynet-api-framework-java.git
         </developerConnection>
         <url>https://github.com/yopeso/skynet-api-framework-java</url>
-        <tag>skynet-framework-java-${version}</tag>
+        <tag>skynet-framework-java-${project.version}</tag>
     </scm>
 
     <properties>
