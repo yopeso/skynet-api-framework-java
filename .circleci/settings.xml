@@ -5,12 +5,12 @@
 
 
     <activeProfiles>
-        <activeProfile>github</activeProfile>
+        <activeProfile>github-api</activeProfile>
     </activeProfiles>
 
     <profiles>
         <profile>
-            <id>github</id>
+            <id>github-api</id>
             <repositories>
                 <repository>
                     <id>central</id>
@@ -23,7 +23,7 @@
                     </snapshots>
                 </repository>
                 <repository>
-                    <id>github</id>
+                    <id>github-api</id>
                     <name>Skynet JAVA Github Apache Maven Package</name>
                     <url>https://maven.pkg.github.com/yopeso/skynet-api-framework-java</url>
                     <releases>
@@ -39,7 +39,7 @@
 
     <servers>
         <server>
-            <id>github</id>
+            <id>github-api</id>
             <username>leonardmustatea</username>
             <password>${GITHUB_ACCESS_TOKEN}</password>
         </server>

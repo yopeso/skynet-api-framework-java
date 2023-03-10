@@ -6,7 +6,7 @@
 
     <groupId>com.skynet.api.framework.java</groupId>
     <artifactId>skynet-api-framework-java</artifactId>
-    <version>1.0.128</version>
+    <version>1.0.129</version>
 
     <distributionManagement>
         <repository>
