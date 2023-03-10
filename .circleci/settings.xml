@@ -26,6 +26,9 @@
                     <id>github</id>
                     <name>Skynet JAVA Github Apache Maven Package</name>
                     <url>https://maven.pkg.github.com/yopeso/skynet-api-framework-java</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
                     <snapshots>
                         <enabled>true</enabled>
                     </snapshots>
