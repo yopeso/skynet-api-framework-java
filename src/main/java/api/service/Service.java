@@ -13,6 +13,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import utils.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -122,6 +123,11 @@ public final class Service {
 
     public Service path(String path) {
         requestSpecBuilder.setBasePath(path);
+        return this;
+    }
+
+    public Service multipart(String filename, File file) {
+        requestSpecBuilder.addMultiPart(filename, file);
         return this;
     }
 
