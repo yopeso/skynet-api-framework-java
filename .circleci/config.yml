@@ -17,6 +17,10 @@ jobs:
             - .
       - attach_workspace:
           at: ~/project/
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          template: basic_fail_1
 
   validate:
     docker:
@@ -39,6 +43,10 @@ jobs:
           root: ~/project
           paths:
             - .
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          template: basic_fail_1
 
   pack:
     docker:
@@ -57,6 +65,10 @@ jobs:
           root: ~/project
           paths:
             - .
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          template: basic_fail_1
 
 
   build:
@@ -67,6 +79,34 @@ jobs:
       - run:
           command: |
             mvn clean install
+            echo 'export COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")' >> $BASH_ENV
+            source $BASH_ENV
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: pass
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "Commit messages:  $COMMIT_MESSAGE :white_check_mark:",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: pass
+          template: basic_success_1
 
   deploy:
     docker:
@@ -79,6 +119,14 @@ jobs:
           command: |
             mvn -s .circleci/settings.xml deploy
             rm -f ~/version.txt
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: pass
+          template: success_tagged_deploy_1
 
 workflows:
   version: 2
