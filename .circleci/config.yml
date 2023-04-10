@@ -12,7 +12,13 @@ jobs:
       - checkout
       - run:
           name: Check version has been bumped
-          command: bash ./scripts/check-package-version.sh $CIRCLE_PROJECT_REPONAME
+          command: |
+            bash ./scripts/check-package-version.sh $CIRCLE_PROJECT_REPONAME
+            package_version=$(mvn -s .circleci/settings.xml -f pom.xml -q -Dexec.executable="echo" \
+                                  -Dexec.args='${project.version}' --non-recursive exec:exec)
+            echo "package version config" $package_version
+            echo "export PACKAGE_VERSION='$package_version'" >> $BASH_ENV
+            source $BASH_ENV
       - persist_to_workspace:
           root: ~/project
           paths:
@@ -23,6 +29,24 @@ jobs:
           channel: $SLACK_DEFAULT_CHANNEL
           event: fail
           template: basic_fail_1
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: pass
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "Package Versions: ${PACKAGE_VERSION}",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
 
   validate:
     docker:
